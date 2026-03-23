@@ -33,9 +33,9 @@ document.getElementById('checkoutForm').addEventListener('submit', function(e) {
     currentOrder.name = document.getElementById('custName').value;
     currentOrder.phone = document.getElementById('custPhone').value;
     
-    // Trigger Upsell Popup
+    // Direct Payment (Bypassing Upsell/Downsell)
     closeCheckout();
-    document.getElementById('upsellModal').classList.remove('hidden');
+    initiatePayment();
 });
 
 // 3. Upsell / Downsell Logic
