@@ -12,7 +12,7 @@ const CANCEL_URL = window.location.origin + "/pages/cancel.html";
 let currentOrder = {
     name: "",
     phone: "",
-    amount: 249,
+    amount: 199,
     items: ["Viral AI VIDEO Reels Mega Bundle"]
 };
 
@@ -40,7 +40,7 @@ document.getElementById('checkoutForm').addEventListener('submit', function(e) {
 
 // 3. Upsell / Downsell Logic
 function addToOrder() {
-    currentOrder.amount = 249 + 149;
+    currentOrder.amount = 199 + 149;
     currentOrder.items.push("500+ Extra Viral AI VIDEO + Canva Templates");
     initiatePayment();
 }
@@ -51,7 +51,7 @@ function showDownsell() {
 }
 
 function applyDownsell() {
-    currentOrder.amount = 199;
+    currentOrder.amount = 149;
     currentOrder.items = ["Special Offer: Main Bundle Only"];
     initiatePayment();
 }
