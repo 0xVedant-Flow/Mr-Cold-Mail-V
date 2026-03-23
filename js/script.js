@@ -62,42 +62,78 @@ function proceedToPaymentAt(amt) {
 }
 
 // 4. RupantorPay Payment Integration
-function initiatePayment() {
+async function initiatePayment() {
     console.log("Initiating payment for:", currentOrder);
     
     // In a real production environment, you should ideally do this on a backend
-    // but here we provide the frontend implementation structure for RupantorPay.
+    // to keep your API Key secure. This client-side fetch is for demonstration and
+    // will work if the provider supports CORS.
     
     const transactionId = 'TXN_' + Date.now();
     
-    // Build the request body for RupantorPay
+    try {
+        const response = await fetch('https://payment.rupantorpay.com/api/payment/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-KEY': API_KEY, // The W3nK... key goes here
+                'X-CLIENT': 'mrcoldmail.netlify.app'
+            },
+            body: JSON.stringify({
+                amount: currentOrder.amount.toString(),
+                customer_name: currentOrder.name,
+                customer_phone: currentOrder.phone,
+                customer_email: "iswgtm@gmail.com",
+                transaction_id: transactionId,
+                success_url: SUCCESS_URL,
+                fail_url: FAIL_URL,
+                cancel_url: CANCEL_URL,
+                metadata: JSON.stringify(currentOrder.items),
+                desc: "2400+ Viral AI VIDEO Reels Mega Bundle"
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.status === 'success' || data.payment_url) {
+            window.location.href = data.payment_url;
+        } else {
+            console.error("Payment initiation failed:", data);
+            alert("পেমেন্ট শুরু করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন বা ওয়াটসঅ্যাপে যোগাযোগ করুন।");
+            // Fallback: If JSON API fails, try direct form submit as backup
+            fallbackFormSubmit(transactionId);
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        fallbackFormSubmit(transactionId);
+    }
+}
+
+// Fallback method using standard Form POST if Fetch/CORS fails
+function fallbackFormSubmit(transactionId) {
     const paymentData = {
         api_key: API_KEY,
         amount: currentOrder.amount,
         customer_name: currentOrder.name,
         customer_phone: currentOrder.phone,
+        customer_email: "iswgtm@gmail.com",
         transaction_id: transactionId,
         success_url: SUCCESS_URL,
         fail_url: FAIL_URL,
         cancel_url: CANCEL_URL,
-        metadata: JSON.stringify(currentOrder.items)
+        desc: "2400+ Viral AI VIDEO Reels Mega Bundle"
     };
 
-    // Note: To avoid CORS issues or revealing API keys, this is usually handled via server-side redirect or a form submission.
-    // Creating a dynamic form and submitting it is a common way for payment gateways.
-    
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'https://payment.rupantorpay.com/api/payment/checkout';
 
     for (const key in paymentData) {
-        if (paymentData.hasOwnProperty(key)) {
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = key;
-            hiddenField.value = paymentData[key];
-            form.appendChild(hiddenField);
-        }
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = key;
+        hiddenField.value = paymentData[key];
+        form.appendChild(hiddenField);
     }
 
     document.body.appendChild(form);
