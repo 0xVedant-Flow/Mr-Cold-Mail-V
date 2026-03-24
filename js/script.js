@@ -5,6 +5,7 @@
 
 // Configuration
 const API_KEY = "i9tXBNxUC2b1TqhO208jB9MP2ImgiDaNRlG55buta7AbVvVtGM"; // User API Key
+const PAYMENT_LINK = "https://rupantorpay.com/paymentlink/eyJ1aWQiOiIyMjQ3IiwiYnJhbmRfaWQiOiIxMzQ0IiwiY3VzdG9tZXJfYW1vdW50IjoiMTk5In0";
 const SUCCESS_URL = window.location.origin + "/pages/success.html";
 const FAIL_URL = window.location.origin + "/pages/fail.html";
 const CANCEL_URL = window.location.origin + "/pages/cancel.html";
@@ -64,6 +65,12 @@ function proceedToPaymentAt(amt) {
 // 4. RupantorPay Payment Integration
 async function initiatePayment() {
     console.log("Initiating payment for:", currentOrder);
+    
+    // Use Static Payment Link for ৳199 bundle for reliability
+    if (currentOrder.amount === 199 && typeof PAYMENT_LINK !== 'undefined') {
+        window.location.href = PAYMENT_LINK;
+        return;
+    }
     
     // In a real production environment, you should ideally do this on a backend
     // to keep your API Key secure. This client-side fetch is for demonstration and
