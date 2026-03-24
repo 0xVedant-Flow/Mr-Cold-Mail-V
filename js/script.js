@@ -4,7 +4,7 @@
 */
 
 // Configuration
-const API_KEY = "nn9lsk96XqrPXE631XH1hqYjI4eRm7B6MxNLOGD4uJa1ECNZcQ"; // User API Key
+const API_KEY = "i9tXBNxUC2b1TqhO208jB9MP2ImgiDaNRlG55buta7AbVvVtGM"; // User API Key
 const SUCCESS_URL = window.location.origin + "/pages/success.html";
 const FAIL_URL = window.location.origin + "/pages/fail.html";
 const CANCEL_URL = window.location.origin + "/pages/cancel.html";
